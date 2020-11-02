@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 struct Solution{}
 
 impl Solution {
@@ -37,12 +38,17 @@ impl Solution {
         }
         res
     }
+
+    pub fn num_jewels_in_stones(j: String, s: String) -> i32 {
+        let set = j.chars().collect::<HashSet<char>>();
+        s.chars().filter(|x| set.contains(x)).count() as i32
+    }
 }
 
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::Solution;
 
     #[test]
     fn code1470(){
