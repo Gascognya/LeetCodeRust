@@ -67,13 +67,38 @@ impl Solution {
     }
 
     pub fn min_count(coins: Vec<i32>) -> i32 {
-        4
+        // let mut count = 0;
+        // coins.iter().for_each(|n| count += (n+1)/2);
+        // count
+        coins.iter().map(|n| (n+1)/2).sum()
+    }
+
+    pub fn subtract_product_and_sum(n: i32) -> i32 {
+        let cmp = n.to_string();
+        let iter = cmp.chars().map(|c| c.to_digit(10).unwrap() as i32);
+        iter.clone().fold(1, |acc, x| acc*x) - iter.clone().fold(0, |acc,x|acc+x)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::Solution;
+    #[test]
+    fn code1281(){
+        // 1281. 整数的各位积和之差
+        // 给你一个整数 n，请你帮忙计算并返回
+        // 该整数「各位数字之积」与「各位数字之和」的差。
+        assert_eq!(
+            Solution::subtract_product_and_sum(234),
+            15
+        );
+
+        assert_eq!(
+            Solution::subtract_product_and_sum(4421),
+            21
+        );
+    }
+
     #[test]
     fn codelcp06() {
         // LCP 06. 拿硬币
@@ -82,6 +107,10 @@ mod tests {
         assert_eq!(
             Solution::min_count(vec![4, 2, 1]),
             4
+        );
+        assert_eq!(
+            Solution::min_count(vec![2, 3, 10]),
+            8
         );
     }
 
