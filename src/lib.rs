@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashSet, HashMap};
 pub struct Solution;
 
 impl Solution {
@@ -70,33 +70,69 @@ impl Solution {
         // let mut count = 0;
         // coins.iter().for_each(|n| count += (n+1)/2);
         // count
-        coins.iter().map(|n| (n+1)/2).sum()
+        coins.iter().map(|n| (n + 1) / 2).sum()
     }
 
     pub fn subtract_product_and_sum(n: i32) -> i32 {
         let cmp = n.to_string();
         let iter = cmp.chars().map(|c| c.to_digit(10).unwrap() as i32);
-        iter.clone().fold(1, |acc, x| acc*x) - iter.clone().fold(0, |acc,x|acc+x)
+        iter.clone().fold(1, |acc, x| acc * x) - iter.clone().fold(0, |acc, x| acc + x)
+    }
+
+    pub fn smaller_numbers_than_current(nums: Vec<i32>) -> Vec<i32> {
+        let mut m = HashMap::new();
+        let mut v = Vec::new();
+        for num in nums.iter() {
+            if let Some(cache) = m.get(num) {
+                v.push(*cache)
+            } else {
+                let mut count = 0;
+                for n in nums.iter() {
+                    if num > n {
+                        count += 1;
+                    }
+                }
+                m.insert(num, count);
+                v.push(count)
+            }
+        }
+        v
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::Solution;
+    //--------------2020/11/3--------------
     #[test]
-    fn code1281(){
+    fn code1365() {
+        // 1365. 有多少小于当前数字的数字
+        // 给你一个数组 nums，对于其中每个元素 nums[i]，
+        // 请你统计数组中比它小的所有数字的数目。
+        // 换而言之，对于每个 nums[i] 你必须计算出有效的 j 的数量，
+        // 其中 j 满足 j != i 且 nums[j] < nums[i] 。
+        // 以数组形式返回答案。
+        assert_eq!(
+            Solution::smaller_numbers_than_current(vec![8, 1, 2, 2, 3]),
+            vec![4, 0, 1, 1, 3]
+        );
+        assert_eq!(
+            Solution::smaller_numbers_than_current(vec![6, 5, 4, 8]),
+            vec![2, 1, 0, 3]
+        );
+        assert_eq!(
+            Solution::smaller_numbers_than_current(vec![7, 7, 7, 7]),
+            vec![0, 0, 0, 0]
+        );
+    }
+    #[test]
+    fn code1281() {
         // 1281. 整数的各位积和之差
         // 给你一个整数 n，请你帮忙计算并返回
         // 该整数「各位数字之积」与「各位数字之和」的差。
-        assert_eq!(
-            Solution::subtract_product_and_sum(234),
-            15
-        );
+        assert_eq!(Solution::subtract_product_and_sum(234), 15);
 
-        assert_eq!(
-            Solution::subtract_product_and_sum(4421),
-            21
-        );
+        assert_eq!(Solution::subtract_product_and_sum(4421), 21);
     }
 
     #[test]
@@ -104,14 +140,8 @@ mod tests {
         // LCP 06. 拿硬币
         // 桌上有 n 堆力扣币，每堆的数量保存在数组 coins 中。
         // 我们每次可以选择任意一堆，拿走其中的一枚或者两枚，求拿完所有力扣币的最少次数。
-        assert_eq!(
-            Solution::min_count(vec![4, 2, 1]),
-            4
-        );
-        assert_eq!(
-            Solution::min_count(vec![2, 3, 10]),
-            8
-        );
+        assert_eq!(Solution::min_count(vec![4, 2, 1]), 4);
+        assert_eq!(Solution::min_count(vec![2, 3, 10]), 8);
     }
 
     #[test]
