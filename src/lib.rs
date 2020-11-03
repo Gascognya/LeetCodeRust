@@ -98,13 +98,41 @@ impl Solution {
         }
         v
     }
+    pub fn decompress_rl_elist(nums: Vec<i32>) -> Vec<i32> {
+        let mut index = 0;
+        let mut res = vec![];
+        while index < nums.len() {
+            res.extend(vec![nums[index + 1]; nums[index] as usize].iter());
+            index += 2;
+        }
+        res
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    
     use super::Solution;
+
     //--------------2020/11/3--------------
+    #[test]
+    fn code1313(){
+        // 1313. 解压缩编码列表
+        // 给你一个以行程长度编码压缩的整数列表 nums 。
+        // 考虑每对相邻的两个元素 [freq, val] = [nums[2*i], 
+        // nums[2*i+1]] （其中 i >= 0 ），
+        // 每一对都表示解压后子列表中有 freq 个值为 val 的元素，
+        // 你需要从左到右连接所有子列表以生成解压后的列表。
+        // 请你返回解压后的列表。
+        assert_eq!(
+            Solution::decompress_rl_elist(vec![1,2,3,4]),
+            vec![2,4,4,4]
+        );
+        assert_eq!(
+            Solution::decompress_rl_elist(vec![1,1,2,3]),
+            vec![1,3,3]
+        );
+    }
+
     #[test]
     fn code1365() {
         // 1365. 有多少小于当前数字的数字
