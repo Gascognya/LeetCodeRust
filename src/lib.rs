@@ -1,4 +1,4 @@
-use std::collections::{HashSet, HashMap};
+use std::collections::{HashMap, HashSet};
 pub struct Solution;
 
 impl Solution {
@@ -107,29 +107,92 @@ impl Solution {
         }
         res
     }
+    pub fn max_depth(s: String) -> i32 {
+        let mut depth = 0;
+        let mut max_depth = 0;
+        let v = s.chars().collect::<Vec<char>>();
+        for i in v.iter() {
+            match i {
+                '(' => depth += 1,
+                ')' => {
+                    max_depth = depth.max(max_depth);
+                    depth -= 1;
+                }
+                _ => {}
+            }
+        }
+        max_depth
+    }
+    pub fn min_time_to_visit_all_points(points: Vec<Vec<i32>>) -> i32 {
+        let mut step = 0;
+        let mut index = 1;
+        while index < points.len() {
+            let x = points[index][0] - points[index-1][0];
+            let y = points[index][1] - points[index-1][1];
+            step += x.abs().max(y.abs());
+            index += 1;
+        }
+        step
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::Solution;
 
+    //--------------2020/11/4--------------
+    #[test]
+    fn code1266() {
+        // 1266. 访问所有点的最小时间
+        // 平面上有 n 个点，点的位置用整数坐标表示 points[i] = [xi, yi]。
+        // 请你计算访问所有这些点需要的最小时间（以秒为单位）。
+        // 你可以按照下面的规则在平面上移动：
+        // 每一秒沿水平或者竖直方向移动一个单位长度，
+        // 或者跨过对角线（可以看作在一秒内向水平和竖直方向各移动一个单位长度）。
+        // 必须按照数组中出现的顺序来访问这些点。
+        assert_eq!(
+            Solution::min_time_to_visit_all_points(vec![vec![1, 1], vec![3, 4], vec![-1, 0]]),
+            7
+        );
+        assert_eq!(
+            Solution::min_time_to_visit_all_points(vec![vec![3, 2], vec![-2, 2]]),
+            5
+        );
+    }
+    #[test]
+    fn code1614() {
+        // 1614. 括号的最大嵌套深度
+        // 如果字符串满足一下条件之一，则可以称之为
+        // 有效括号字符串（valid parentheses string，可以简写为 VPS）：
+        // 字符串是一个空字符串 ""，或者是一个不为 "(" 或 ")" 的单字符。
+        // 字符串可以写为 AB（A 与 B 字符串连接），
+        // 其中 A 和 B 都是 有效括号字符串 。
+        // 字符串可以写为 (A)，其中 A 是一个 有效括号字符串 。
+        assert_eq!(Solution::max_depth(String::from("(1+(2*3)+((8)/4))+1")), 3);
+
+        assert_eq!(Solution::max_depth(String::from("(1)+((2))+(((3)))")), 3);
+
+        assert_eq!(Solution::max_depth(String::from("1+(2*3)/(2-1)")), 1);
+
+        assert_eq!(Solution::max_depth(String::from("1")), 0);
+    }
     //--------------2020/11/3--------------
     #[test]
-    fn code1313(){
+    fn code1313() {
         // 1313. 解压缩编码列表
         // 给你一个以行程长度编码压缩的整数列表 nums 。
-        // 考虑每对相邻的两个元素 [freq, val] = [nums[2*i], 
+        // 考虑每对相邻的两个元素 [freq, val] = [nums[2*i],
         // nums[2*i+1]] （其中 i >= 0 ），
         // 每一对都表示解压后子列表中有 freq 个值为 val 的元素，
         // 你需要从左到右连接所有子列表以生成解压后的列表。
         // 请你返回解压后的列表。
         assert_eq!(
-            Solution::decompress_rl_elist(vec![1,2,3,4]),
-            vec![2,4,4,4]
+            Solution::decompress_rl_elist(vec![1, 2, 3, 4]),
+            vec![2, 4, 4, 4]
         );
         assert_eq!(
-            Solution::decompress_rl_elist(vec![1,1,2,3]),
-            vec![1,3,3]
+            Solution::decompress_rl_elist(vec![1, 1, 2, 3]),
+            vec![1, 3, 3]
         );
     }
 
