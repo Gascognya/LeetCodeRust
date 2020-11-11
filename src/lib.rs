@@ -184,6 +184,7 @@ impl Solution {
         }
         sum
     }
+    
     pub fn diagonal_sum(mat: Vec<Vec<i32>>) -> i32 {
         let count = (mat.len() + 1) / 2;
         let (mut d, mut nd, mut num) = (0, 0, 0);
@@ -200,6 +201,7 @@ impl Solution {
         }
         num
     }
+    
     pub fn busy_student(start_time: Vec<i32>, end_time: Vec<i32>, query_time: i32) -> i32 {
         let mut num = 0;
         for i in 0..start_time.len() {
@@ -216,6 +218,39 @@ impl Solution {
         
         // start_time.drain(..).zip(end_time.drain(..)).fold(0,|s,(st,ed)|s+(st<=query_time&&query_time<=ed) as i32)
     }
+
+    pub fn calculate(s: String) -> i32 {
+        let (mut x, mut y) = (1, 0);
+        for c in s.chars() {
+            match c {
+                'A' => x = 2 * x + y,
+                'B' => y = 2 * y + x,
+                _ => ()
+            }
+        }
+        x + y
+    }
+
+    pub fn can_form_array(arr: Vec<i32>, mut pieces: Vec<Vec<i32>>) -> bool {
+        let mut map: HashMap<i32, usize> = HashMap::new();
+        let mut choose: &Vec<i32> ;
+        for num in arr.iter() {
+            // set.insert(num);
+            if let Some(index) = map.get(num) {
+                choose = &pieces[*index];
+            } else {
+                for (index, piece) in pieces.iter().enumerate() {
+                    map.insert(piece[0],index);
+                    if *num == piece[0] {
+                        choose = piece;
+                    }
+                }
+                return false;
+            }
+            
+        }
+        true
+    }
 }
 
 
@@ -223,6 +258,38 @@ impl Solution {
 mod tests {
     use super::datastructure;
     use super::Solution;
+
+    #[test]
+    fn code1640(){
+        // 1640. 能否连接形成数组
+        // 给你一个整数数组 arr ，数组中的每个整数 互不相同 。
+        // 另有一个由整数数组构成的数组 pieces，其中的整数也 互不相同 。
+        // 请你以 任意顺序 连接 pieces 中的数组以形成 arr 。
+        // 但是，不允许 对每个数组 pieces[i] 中的整数重新排序。
+        // 如果可以连接 pieces 中的数组形成 arr ，
+        // 返回 true ；否则，返回 false 。
+        assert_eq!(
+            Solution::can_form_array(vec![85], vec![vec![85]]),
+            true
+        );
+    }
+
+    #[test]
+    fn codelcp17(){
+        // LCP 17. 速算机器人
+        // 小扣在秋日市集发现了一款速算机器人。
+        // 店家对机器人说出两个数字（记作 x 和 y），请小扣说出计算指令：
+        // "A" 运算：使 x = 2 * x + y；
+        // "B" 运算：使 y = 2 * y + x。
+        // 在本次游戏中，店家说出的数字为 x = 1 和 y = 0，
+        // 小扣说出的计算指令记作仅由大写字母 A、B 组成的字符串 s，
+        // 字符串中字符的顺序表示计算顺序，请返回最终 x 与 y 的和为多少。
+
+        assert_eq!(
+            Solution::calculate(String::from("AB")),
+            4
+        );
+    }
 
     #[test]
     fn code1450(){
@@ -291,14 +358,15 @@ mod tests {
             5
         );
     }
+    
     #[test]
     fn code1285() {
         // 1295. 统计位数为偶数的数字
         // 给你一个整数数组 nums，请你返回其中位数为 偶数 的数字的个数。
         assert_eq!(Solution::find_numbers(vec![12, 345, 2, 6, 7896]), 2);
-
         assert_eq!(Solution::find_numbers(vec![555, 901, 482, 1771]), 1);
     }
+    
     #[test]
     fn code1588() {
         // 1588. 所有奇数长度子数组的和
@@ -310,6 +378,7 @@ mod tests {
         assert_eq!(Solution::sum_odd_length_subarrays(vec![1, 2]), 3);
         assert_eq!(Solution::sum_odd_length_subarrays(vec![10, 11, 12]), 66);
     }
+    
     //--------------2020/11/4--------------
     #[test]
     fn code1266() {
@@ -329,6 +398,7 @@ mod tests {
             5
         );
     }
+    
     #[test]
     fn code1614() {
         // 1614. 括号的最大嵌套深度
@@ -387,6 +457,7 @@ mod tests {
             vec![0, 0, 0, 0]
         );
     }
+    
     #[test]
     fn code1281() {
         // 1281. 整数的各位积和之差
@@ -429,6 +500,7 @@ mod tests {
         assert_eq!(Solution::xor_operation(1, 7), 7);
         assert_eq!(Solution::xor_operation(10, 5), 2);
     }
+    
     #[test]
     fn offer58ii() {
         // 剑指 Offer 58 - II. 左旋转字符串
@@ -445,6 +517,7 @@ mod tests {
             String::from("umghlrlose")
         );
     }
+    
     #[test]
     fn code1603() {
         // 1603. 设计停车系统
@@ -468,6 +541,7 @@ mod tests {
 
         assert_eq!(park.add_car(1), false);
     }
+    
     #[test]
     fn code771() {
         // 771. 宝石与石头
@@ -485,6 +559,7 @@ mod tests {
             0
         );
     }
+    
     #[test]
     fn code1470() {
         // 1470. 重新排列数组
@@ -502,6 +577,7 @@ mod tests {
         );
         assert_eq!(Solution::shuffle(vec![1, 1, 2, 2], 2), vec![1, 2, 1, 2]);
     }
+    
     #[test]
     fn code1431() {
         // 1431. 拥有最多糖果的孩子
@@ -524,6 +600,7 @@ mod tests {
             vec![true, false, true]
         );
     }
+    
     #[test]
     fn code1512() {
         // 1512. 好数对的数目
