@@ -1,4 +1,6 @@
 use std::collections::{HashMap, HashSet};
+pub mod datastructure;
+use datastructure::*;
 pub struct Solution;
 
 impl Solution {
@@ -98,6 +100,7 @@ impl Solution {
         }
         v
     }
+    
     pub fn decompress_rl_elist(nums: Vec<i32>) -> Vec<i32> {
         let mut index = 0;
         let mut res = vec![];
@@ -107,6 +110,7 @@ impl Solution {
         }
         res
     }
+    
     pub fn max_depth(s: String) -> i32 {
         let mut depth = 0;
         let mut max_depth = 0;
@@ -123,23 +127,108 @@ impl Solution {
         }
         max_depth
     }
+    
     pub fn min_time_to_visit_all_points(points: Vec<Vec<i32>>) -> i32 {
         let mut step = 0;
         let mut index = 1;
         while index < points.len() {
-            let x = points[index][0] - points[index-1][0];
-            let y = points[index][1] - points[index-1][1];
+            let x = points[index][0] - points[index - 1][0];
+            let y = points[index][1] - points[index - 1][1];
             step += x.abs().max(y.abs());
             index += 1;
         }
         step
     }
+    
+    pub fn sum_odd_length_subarrays(arr: Vec<i32>) -> i32 {
+        let mut d = (arr.len() as i32 + 1) / 2;
+        let mut prev = d;
+        let mut ret = 0;
+
+        for i in 0..(arr.len() / 2) {
+            let j = arr.len() - 1 - i;
+
+            ret += (arr[i] + arr[j]) * prev;
+            d -= match arr.len() % 2 {
+                0 => 1,
+                _ => 2 * (1 - i as i32 % 2),
+            };
+            prev += d;
+        }
+
+        if arr.len() % 2 == 1 {
+            ret += arr[arr.len() / 2] * prev;
+        }
+
+        ret
+    }
+    
+    pub fn find_numbers(nums: Vec<i32>) -> i32 {
+        let mut count = 0;
+        for num in nums {
+            match num.to_string().len() {
+                n if n % 2 == 0 => count += 1,
+                _ => (),
+            }
+        }
+        count
+    }
+
+    pub fn get_decimal_value(head: Option<Box<ListNode>>) -> i32 {
+        let mut sum = 0;
+        let mut next = &head;
+        while let Some(node) = next{
+            sum = sum << 1;
+            sum |= node.val;
+            next = &node.next;
+        }
+        sum
+    }
 }
+
 
 #[cfg(test)]
 mod tests {
+    use super::datastructure;
     use super::Solution;
+    
+    #[test]
+    fn code1290() {
+        // 1290. 二进制链表转整数
+        // 给你一个单链表的引用结点 head。链表中每个结点的值不是 0 就是 1。
+        // 已知此链表是一个整数数字的二进制表示形式。
+        // 请你返回该链表所表示数字的 十进制值 。
+        let mut n0 = datastructure::ListNode::new(1);
+        let mut n1 = datastructure::ListNode::new(0);
+        let mut n2 = datastructure::ListNode::new(1);
+        n1.next = Some(Box::new(n2));
+        n0.next = Some(Box::new(n1));
+        let head = Some(Box::new(n0));
+        
+        assert_eq!(
+            Solution::get_decimal_value(head),
+            1
+        );
+    }
+    #[test]
+    fn code1285() {
+        // 1295. 统计位数为偶数的数字
+        // 给你一个整数数组 nums，请你返回其中位数为 偶数 的数字的个数。
+        assert_eq!(Solution::find_numbers(vec![12, 345, 2, 6, 7896]), 2);
 
+        assert_eq!(Solution::find_numbers(vec![555, 901, 482, 1771]), 1);
+    }
+    #[test]
+    fn code1588() {
+        // 1588. 所有奇数长度子数组的和
+        // 给你一个正整数数组 arr ，
+        // 请你计算所有可能的奇数长度子数组的和。
+        // 子数组 定义为原数组中的一个连续子序列。
+        // 请你返回 arr 中 所有奇数长度子数组的和 。
+        assert_eq!(Solution::sum_odd_length_subarrays(vec![1, 4, 2, 5, 3]), 58);
+        assert_eq!(Solution::sum_odd_length_subarrays(vec![1, 2]), 3);
+        assert_eq!(Solution::sum_odd_length_subarrays(vec![10, 11, 12]), 66);
+    }
     //--------------2020/11/4--------------
     #[test]
     fn code1266() {
@@ -246,7 +335,6 @@ mod tests {
             String::from("1[.]1[.]1[.]1")
         );
     }
-
     //--------------2020/11/2--------------
     #[test]
     fn code1485() {
@@ -276,7 +364,6 @@ mod tests {
             String::from("umghlrlose")
         );
     }
-
     #[test]
     fn code1603() {
         // 1603. 设计停车系统
@@ -290,29 +377,8 @@ mod tests {
         // carType 有三种类型：大，中，小，分别用数字 1， 2 和 3 表示。
         // 一辆车只能停在  carType 对应尺寸的停车位中。
         // 如果没有空车位，请返回 false ，否则将该车停入车位并返回 true 。
-        struct ParkingSystem {
-            capacity: Vec<i32>,
-        }
 
-        impl ParkingSystem {
-            fn new(big: i32, medium: i32, small: i32) -> Self {
-                Self {
-                    capacity: vec![big, medium, small],
-                }
-            }
-
-            fn add_car(&mut self, car_type: i32) -> bool {
-                let n = car_type as usize - 1;
-                if self.capacity[n] > 0 {
-                    self.capacity[n] -= 1;
-                    true
-                } else {
-                    false
-                }
-            }
-        }
-
-        let mut park = ParkingSystem::new(1, 1, 0);
+        let mut park = datastructure::ParkingSystem::new(1, 1, 0);
         assert_eq!(park.add_car(1), true);
 
         assert_eq!(park.add_car(2), true);
