@@ -184,6 +184,38 @@ impl Solution {
         }
         sum
     }
+    pub fn diagonal_sum(mat: Vec<Vec<i32>>) -> i32 {
+        let count = (mat.len() + 1) / 2;
+        let (mut d, mut nd, mut num) = (0, 0, 0);
+        while d < count {
+            nd = mat.len() - 1 - d;
+            num += mat[d][d] 
+                + mat[d][nd] 
+                + mat[nd][d]
+                + mat[nd][nd];
+            d += 1;
+        }
+        if nd != d {
+            num -= 3 * mat[nd][nd]
+        }
+        num
+    }
+    pub fn busy_student(start_time: Vec<i32>, end_time: Vec<i32>, query_time: i32) -> i32 {
+        let mut num = 0;
+        for i in 0..start_time.len() {
+            if query_time >= start_time[i] && query_time <= end_time[i]{
+                num += 1;
+            }
+        }
+        num
+        // start_time
+        // .iter()
+        // .zip(end_time.iter())
+        // .filter(|(&s, &e)| s<=query_time&&e>=query_time)
+        // .count() as i32
+        
+        // start_time.drain(..).zip(end_time.drain(..)).fold(0,|s,(st,ed)|s+(st<=query_time&&query_time<=ed) as i32)
+    }
 }
 
 
@@ -191,6 +223,55 @@ impl Solution {
 mod tests {
     use super::datastructure;
     use super::Solution;
+
+    #[test]
+    fn code1450(){
+        // 1450. 在既定时间做作业的学生人数
+        // 给你两个整数数组 startTime（开始时间）和 endTime（结束时间），
+        // 并指定一个整数 queryTime 作为查询时间。
+        // 已知，第 i 名学生在 startTime[i] 时开始写作业并于 endTime[i] 时完成作业。
+        // 请返回在查询时间 queryTime 时正在做作业的学生人数。
+        // 形式上，返回能够使 queryTime 处于区间 [startTime[i], endTime[i]]（含）的学生人数。
+        assert_eq!(
+            Solution::busy_student(vec![1,2,3], vec![3,2,7], 4),
+            1
+        );
+        assert_eq!(
+            Solution::busy_student(vec![4], vec![4], 4),
+            1
+        );
+        assert_eq!(
+            Solution::busy_student(vec![4], vec![4], 5),
+            0
+        );
+        assert_eq!(
+            Solution::busy_student(vec![1,1,1,1], vec![1,3,2,4], 7),
+            0
+        );
+        assert_eq!(
+            Solution::busy_student(vec![9,8,7,6,5,4,3,2,1], vec![10,10,10,10,10,10,10,10,10], 5),
+            5
+        );
+    }
+
+    #[test]
+    fn code1572(){
+        // 1572. 矩阵对角线元素的和
+        // 给你一个正方形矩阵 mat，
+        // 请你返回矩阵对角线元素的和。
+        // 请你返回在矩阵主对角线上的元素和
+        // 副对角线上且不在主对角线上元素的和。
+        assert_eq!(
+            Solution::diagonal_sum(
+                vec![vec![1,2,3],vec![4,5,6],vec![7,8,9]]),
+                25
+        );
+        assert_eq!(
+            Solution::diagonal_sum(
+                vec![vec![1,1,1,1],vec![1,1,1,1],vec![1,1,1,1],vec![1,1,1,1]]),
+                8
+        );
+    }
     
     #[test]
     fn code1290() {
@@ -200,14 +281,14 @@ mod tests {
         // 请你返回该链表所表示数字的 十进制值 。
         let mut n0 = datastructure::ListNode::new(1);
         let mut n1 = datastructure::ListNode::new(0);
-        let mut n2 = datastructure::ListNode::new(1);
+        let n2 = datastructure::ListNode::new(1);
         n1.next = Some(Box::new(n2));
         n0.next = Some(Box::new(n1));
         let head = Some(Box::new(n0));
         
         assert_eq!(
             Solution::get_decimal_value(head),
-            1
+            5
         );
     }
     #[test]
