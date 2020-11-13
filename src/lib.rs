@@ -230,26 +230,22 @@ impl Solution {
         }
         x + y
     }
+    
+    pub fn restore_string(mut s: String, indices: Vec<i32>) -> String {
+        // let mut t = Vec::new();
+        // t.extend(s.chars().zip(indices));
+        
+        //let mut t = s.drain(..).enumerate().collect::<Vec<(usize,char)>>();
 
-    pub fn can_form_array(arr: Vec<i32>, mut pieces: Vec<Vec<i32>>) -> bool {
-        let mut map: HashMap<i32, usize> = HashMap::new();
-        let mut choose: &Vec<i32> ;
-        for num in arr.iter() {
-            // set.insert(num);
-            if let Some(index) = map.get(num) {
-                choose = &pieces[*index];
-            } else {
-                for (index, piece) in pieces.iter().enumerate() {
-                    map.insert(piece[0],index);
-                    if *num == piece[0] {
-                        choose = piece;
-                    }
-                }
-                return false;
-            }
-            
-        }
-        true
+        let mut t: Vec<(char, i32)> = s.drain(..)
+                                        .zip(indices.into_iter())
+                                        .collect();
+
+        t.sort_by_key(|item| item.1);
+
+        // t.into_iter().map(|(n, _)| n).collect()
+        // s.drain(..).unzip::<usize,char,Vec<usize>,String>().1
+        t.drain(..).unzip::<char,i32,String,Vec<i32>>().0
     }
 }
 
@@ -260,18 +256,34 @@ mod tests {
     use super::Solution;
 
     #[test]
-    fn code1640(){
-        // 1640. 能否连接形成数组
-        // 给你一个整数数组 arr ，数组中的每个整数 互不相同 。
-        // 另有一个由整数数组构成的数组 pieces，其中的整数也 互不相同 。
-        // 请你以 任意顺序 连接 pieces 中的数组以形成 arr 。
-        // 但是，不允许 对每个数组 pieces[i] 中的整数重新排序。
-        // 如果可以连接 pieces 中的数组形成 arr ，
-        // 返回 true ；否则，返回 false 。
+    fn code1528(){
+        // 1528. 重新排列字符串
+        // 给你一个字符串 s 和一个 长度相同 的整数数组 indices 。
+        // 请你重新排列字符串 s ，其中第 i 个字符需要移动到 indices[i] 指示的位置。
+        // 返回重新排列后的字符串。
+        
         assert_eq!(
-            Solution::can_form_array(vec![85], vec![vec![85]]),
-            true
+            Solution::restore_string(String::from("codeleet"), vec![4,5,6,7,0,2,1,3]),
+            String::from("leetcode")
         );
+
+        // assert_eq!(
+        //     Solution::restore_string(String::from("abc"), vec![0,1,2]),
+        //     String::from("abc")
+        // );
+
+        // assert_eq!(
+        //     Solution::restore_string(String::from("aiohn"), vec![3,1,4,2,0]),
+        //     String::from("nihao")
+        // );
+        // assert_eq!(
+        //     Solution::restore_string(String::from("aaiougrt"), vec![4,0,2,6,7,3,1,5]),
+        //     String::from("arigatou")
+        // );
+        // assert_eq!(
+        //     Solution::restore_string(String::from("art"), vec![1,0,2]),
+        //     String::from("rat")
+        // );
     }
 
     #[test]
