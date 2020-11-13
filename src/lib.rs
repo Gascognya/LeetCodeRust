@@ -293,7 +293,29 @@ impl Solution {
         }
         
         slow.as_ref().unwrap().val
-        // 为什么本体报错，as_ref有问题
+        // 为什么本体报错，as_ref没问题
+    }
+
+    pub fn get_kth_from_end(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        let mut fast = &head;
+        let mut slow = &head;
+
+        for _ in 0..k {
+            if let Some(n) = fast {
+                fast = &n.next;
+            }
+        }
+        
+        while let (Some(f), Some(s)) = (fast, slow) {
+            fast = &f.next;
+            slow = &s.next;
+        }
+
+        slow.clone()
+    }
+
+    pub fn print_numbers(n: i32) -> Vec<i32> {
+        (1..10_i32.pow(n as u32)).collect()
     }
 }
 
@@ -302,6 +324,37 @@ impl Solution {
 mod tests {
     use super::datastructure;
     use super::Solution;
+
+    #[test]
+    fn offer17(){
+        // 剑指 Offer 17. 打印从1到最大的n位数
+        // 输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。
+        // 比如输入 3，则打印出 1、2、3 一直到最大的 3 位数 999。
+        // assert_eq!(
+        //     Solution::print_numbers(1),
+        //     (1..10).collect::<Vec<i32>>()
+        // );
+
+        assert_eq!(
+            Solution::print_numbers(3),
+            (1..1000).collect::<Vec<i32>>()
+        );
+        // pow 移位
+    }
+
+    #[test]
+    fn offer22(){
+        // 剑指 Offer 22. 链表中倒数第k个节点
+        // 输入一个链表，输出该链表中倒数第k个节点。
+        // 为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。
+        // 例如，一个链表有6个节点，从头节点开始，
+        // 它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。
+        let head = datastructure::ListNode::to_link(vec![1, 2, 3, 4, 5]);
+        assert_eq!(
+            Solution::get_kth_from_end(head, 2),
+            datastructure::ListNode::to_link(vec![4, 5])
+        );
+    }
 
     #[test]
     fn codemst0202(){
