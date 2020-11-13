@@ -268,6 +268,33 @@ impl Solution {
             count == 0
         }).count() as i32
     }
+
+    pub fn kth_to_last(head: Option<Box<ListNode>>, k: i32) -> i32 {
+        // let mut p = &head;
+        // let mut v: Vec<i32> = vec![];
+        // while let Some(n) = p {
+        //     p = &n.next;
+        //     v.push(n.val)
+        // }
+        // v[v.len() - k as usize]
+
+        let mut fast = &head;
+        let mut slow = &head;
+
+        for _ in 0..k {
+            if let Some(n) = fast {
+                fast = &n.next;
+            }
+        }
+        
+        while let (Some(f), Some(s)) = (fast, slow) {
+            fast = &f.next;
+            slow = &s.next;
+        }
+        
+        slow.as_ref().unwrap().val
+        // 为什么本体报错，as_ref有问题
+    }
 }
 
 
@@ -275,6 +302,38 @@ impl Solution {
 mod tests {
     use super::datastructure;
     use super::Solution;
+
+    #[test]
+    fn codemst0202(){
+        // 面试题 02.02. 返回倒数第 k 个节点
+        // 实现一种算法，找出单向链表中倒数第 k 个节点。返回该节点的值。
+
+        // let mut n5 = datastructure::ListNode::new(5);
+        // n5.next = None;
+        // let mut n4 = datastructure::ListNode::new(4);
+        // n4.next = Some(Box::new(n5));
+        // let mut n3 = datastructure::ListNode::new(3);
+        // n3.next = Some(Box::new(n4));
+        // let mut n2 = datastructure::ListNode::new(2);
+        // n2.next = Some(Box::new(n3));
+        // let mut n1 = datastructure::ListNode::new(1);
+        // n1.next = Some(Box::new(n2));
+        // let mut head = Some(Box::new(n1));
+
+        let head = datastructure::ListNode::to_link(vec![1, 2, 3, 4, 5]);
+        
+        // let mut p = &head;
+        // while let Some(ref n) = p {
+        //     p = &n.next;
+        //     println!("{}", n.val);
+            
+        // }
+
+        assert_eq!(
+            Solution::kth_to_last(head, 2),
+            4
+        );
+    }
 
     #[test]
     fn code1221(){
