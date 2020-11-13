@@ -4,17 +4,18 @@ fn main(){
     // Drain([1, 2, 3])
 
     let mut s = String::from("codeleet");
-    let mut s = s.drain(..);
+    let s = s.drain(..);
     println!("{:?}", s);
     // 得到Drain { .. }   
 
-    let mut s = s.enumerate();
+    let s = s.enumerate();
     println!("{:?}", s);
     // Enumerate { iter: Drain { .. }, count: 0 }
 
-    let mut s = s.collect::<Vec<(usize,char)>>();
+    let s = s.collect::<Vec<(usize,char)>>();
     println!("{:?}", s);
     // [(usize, char), (usize, char)]
+
 
     // use std::collections::HashMap;
     // let mut m: HashMap<u32, &str> = HashMap::new();

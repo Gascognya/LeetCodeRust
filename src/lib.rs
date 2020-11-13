@@ -247,6 +247,27 @@ impl Solution {
         // s.drain(..).unzip::<usize,char,Vec<usize>,String>().1
         t.drain(..).unzip::<char,i32,String,Vec<i32>>().0
     }
+
+    pub fn create_target_array(nums: Vec<i32>, index: Vec<i32>) -> Vec<i32> {
+        let mut res:Vec<i32> = vec![];
+        // for (i, n) in nums.into_iter().enumerate() {
+        for i in 0..nums.len() {
+            res.insert(index[i] as usize, nums[i]);
+        }
+        res
+    }
+
+    pub fn balanced_string_split(mut s: String) -> i32 {
+        let mut count = 0;
+        s.drain(..).filter(|c| {
+            match c {
+                'L' => count += 1,
+                'R' => count -= 1,
+                _ => ()
+            }
+            count == 0
+        }).count() as i32
+    }
 }
 
 
@@ -254,6 +275,52 @@ impl Solution {
 mod tests {
     use super::datastructure;
     use super::Solution;
+
+    #[test]
+    fn code1221(){
+        // 1221. 分割平衡字符串
+        // 在一个「平衡字符串」中，'L' 和 'R' 字符的数量是相同的。
+        // 给出一个平衡字符串 s，请你将它分割成尽可能多的平衡字符串。
+        // 返回可以通过分割得到的平衡字符串的最大数量。
+
+        assert_eq!(
+            Solution::balanced_string_split(String::from("RLRRLLRLRL")),
+            4
+        );
+        assert_eq!(
+            Solution::balanced_string_split(String::from("RLLLLRRRLR")),
+            3
+        );
+        assert_eq!(
+            Solution::balanced_string_split(String::from("LLLLRRRR")),
+            1
+        );
+    }
+
+    #[test]
+    fn code1389(){
+        // 1389. 按既定顺序创建目标数组
+        // 给你两个整数数组 nums 和 index。
+        // 你需要按照以下规则创建目标数组：
+        // 目标数组 target 最初为空。
+        // 按从左到右的顺序依次读取 nums[i] 和 index[i]，
+        // 在 target 数组中的下标 index[i] 处插入值 nums[i] 。
+        // 重复上一步，直到在 nums 和 index 中都没有要读取的元素。
+        assert_eq!(
+            Solution::create_target_array(vec![0,1,2,3,4], vec![0,1,2,2,1]),
+            vec![0,4,1,3,2]
+        );
+
+        assert_eq!(
+            Solution::create_target_array(vec![1,2,3,4,0], vec![0,1,2,3,0]),
+            vec![0,1,2,3,4]
+        );
+
+        assert_eq!(
+            Solution::create_target_array(vec![1], vec![0]),
+            vec![1]
+        );
+    }
 
     #[test]
     fn code1528(){
@@ -267,23 +334,23 @@ mod tests {
             String::from("leetcode")
         );
 
-        // assert_eq!(
-        //     Solution::restore_string(String::from("abc"), vec![0,1,2]),
-        //     String::from("abc")
-        // );
+        assert_eq!(
+            Solution::restore_string(String::from("abc"), vec![0,1,2]),
+            String::from("abc")
+        );
 
-        // assert_eq!(
-        //     Solution::restore_string(String::from("aiohn"), vec![3,1,4,2,0]),
-        //     String::from("nihao")
-        // );
-        // assert_eq!(
-        //     Solution::restore_string(String::from("aaiougrt"), vec![4,0,2,6,7,3,1,5]),
-        //     String::from("arigatou")
-        // );
-        // assert_eq!(
-        //     Solution::restore_string(String::from("art"), vec![1,0,2]),
-        //     String::from("rat")
-        // );
+        assert_eq!(
+            Solution::restore_string(String::from("aiohn"), vec![3,1,4,2,0]),
+            String::from("nihao")
+        );
+        assert_eq!(
+            Solution::restore_string(String::from("aaiougrt"), vec![4,0,2,6,7,3,1,5]),
+            String::from("arigatou")
+        );
+        assert_eq!(
+            Solution::restore_string(String::from("art"), vec![1,0,2]),
+            String::from("rat")
+        );
     }
 
     #[test]
