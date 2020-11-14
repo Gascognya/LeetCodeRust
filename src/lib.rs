@@ -317,6 +317,76 @@ impl Solution {
     pub fn print_numbers(n: i32) -> Vec<i32> {
         (1..10_i32.pow(n as u32)).collect()
     }
+
+    pub fn count_good_triplets(arr: Vec<i32>, a: i32, b: i32, c: i32) -> i32 {
+        let mut count = 0;
+        let len = arr.len();
+        for i in 0..len {
+            let ni = arr[i];
+            let range_i_j = ni - a .. ni + a + 1;
+            for j in i + 1..len {
+                let nj = arr[j];
+                if range_i_j.contains(&nj) {
+                    let range_j_k = nj - b .. nj + b + 1;
+                    for k in j + 1..len {
+                        let nk = arr[k];
+                        if range_j_k.contains(&nk) {
+                            let range_i_k = ni - c .. ni + c + 1;
+                            if range_i_k.contains(&nk){
+                                count += 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        count
+    }
+    
+    pub fn judge_circle(moves: String) -> bool {
+        let mut x = 0;
+        let mut y = 0;
+        for op in moves.chars() {
+            match op {
+                'U' => x += 1,
+                'D' => x -= 1,
+                'L' => y -= 1,
+                'R' => y += 1,
+                _ => ()
+            }
+        }
+        // (x, y) == (0, 0)
+        x | y == 0
+    }
+
+    pub fn remove_outer_parentheses(s: String) -> String {
+        let mut flag = 0;
+        let mut buffer = String::new();
+        for c in s.chars() {
+            match c {
+                '(' => {
+                    if flag != 0 { buffer.push('('); }
+                    flag += 1; 
+                },
+                ')' => {
+                    flag -= 1; 
+                    if flag != 0 { buffer.push(')'); }
+                },
+                _ => ()
+            }
+        }
+        buffer
+    }
+
+    pub fn max_product(mut nums: Vec<i32>) -> i32 {
+        nums.sort();
+        (nums[nums.len() - 1] - 1) * (nums[nums.len() - 2] - 1)
+    }
+
+    pub fn replace_space(s: String) -> String {
+        s.replace(' ', "%20")
+    }
+    
 }
 
 
@@ -324,6 +394,116 @@ impl Solution {
 mod tests {
     use super::datastructure;
     use super::Solution;
+
+    #[test]
+    fn offer05(){
+        // 剑指 Offer 05. 替换空格
+        // 请实现一个函数，把字符串 s 中的每个空格替换成"%20"。
+        assert_eq!(
+            Solution::replace_space(String::from("We are happy.")),
+            String::from("We%20are%20happy.")
+        );
+ 
+    }
+
+    #[test]
+    fn code1464(){
+        // 1464. 数组中两元素的最大乘积
+        // 给你一个整数数组 nums，请你选择数组的两个不同下标 i 和 j，
+        // 使 (nums[i]-1)*(nums[j]-1) 取得最大值。
+        // 请你计算并返回该式的最大值。
+
+        assert_eq!(
+            Solution::max_product(vec![3,4,5,2]),
+            12
+        );
+
+        assert_eq!(
+            Solution::max_product(vec![1,5,4,5]),
+            16
+        );
+
+        assert_eq!(
+            Solution::max_product(vec![3,7]),
+            12
+        );
+    }
+
+    #[test]
+    fn code1021(){
+        // 1021. 删除最外层的括号
+        // 有效括号字符串为空 ("")、"(" + A + ")" 或 A + B，
+        // 其中 A 和 B 都是有效的括号字符串，+ 代表字符串的连接。
+        // 例如，""，"()"，"(())()" 和 "(()(()))" 都是有效的括号字符串。
+        // 如果有效字符串 S 非空，且不存在将其拆分为 S = A+B 的方法，
+        // 我们称其为原语（primitive），其中 A 和 B 都是非空有效括号字符串。
+        // 给出一个非空有效字符串 S，考虑将其进行原语化分解，
+        // 使得：S = P_1 + P_2 + ... + P_k，其中 P_i 是有效括号字符串原语。
+        // 对 S 进行原语化分解，删除分解中每个原语字符串的最外层括号，返回 S 。
+        assert_eq!(
+            Solution::remove_outer_parentheses(String::from("(()())(())")),
+            String::from("()()()")
+        );
+
+        assert_eq!(
+            Solution::remove_outer_parentheses(String::from("(()())(())(()(()))")),
+            String::from("()()()()(())")
+        );
+
+        assert_eq!(
+            Solution::remove_outer_parentheses(String::from("()()")),
+            String::from("")
+        );
+    }
+
+    #[test]
+    fn code657(){
+        // 657. 机器人能否返回原点
+        // 在二维平面上，有一个机器人从原点 (0, 0) 开始。
+        // 给出它的移动顺序，判断这个机器人在完成移动后是否在 (0, 0) 处结束。
+        // 移动顺序由字符串表示。字符 move[i] 表示其第 i 次移动。
+        // 机器人的有效动作有 R（右），L（左），U（上）和 D（下）。
+        // 如果机器人在完成所有动作后返回原点，则返回 true。否则，返回 false。
+        // 注意：机器人“面朝”的方向无关紧要。 “R” 将始终使机器人向右移动一次，
+        // “L” 将始终向左移动等。此外，假设每次移动机器人的移动幅度相同。
+
+        assert_eq!(
+            Solution::judge_circle(String::from("UD")),
+            true
+        );
+
+        assert_eq!(
+            Solution::judge_circle(String::from("LL")),
+            false
+        );
+    }
+
+    #[test]
+    fn code1534(){
+        // 1534. 统计好三元组
+        // 给你一个整数数组 arr ，以及 a、b 、c 三个整数。请你统计其中好三元组的数量。
+        // 如果三元组 (arr[i], arr[j], arr[k]) 满足下列全部条件，则认为它是一个 好三元组 。
+        // 0 <= i < j < k < arr.length
+        // |arr[i] - arr[j]| <= a
+        // |arr[j] - arr[k]| <= b
+        // |arr[i] - arr[k]| <= c
+        // 其中 |x| 表示 x 的绝对值。
+        // 返回 好三元组的数量 。
+        assert_eq!(
+            Solution::count_good_triplets(vec![3,0,1,1,9,7], 7, 2, 3),
+            4
+        );
+
+        assert_eq!(
+            Solution::count_good_triplets(vec![1,1,2,2,3], 0, 0, 1),
+            0
+        );
+
+        assert_eq!(
+            Solution::count_good_triplets(vec![4,9,9,8,9,5,3,7], 1, 3, 0),
+            3
+        );
+    }
 
     #[test]
     fn offer17(){
