@@ -387,6 +387,21 @@ impl Solution {
         s.replace(' ', "%20")
     }
     
+    pub fn replace_elements(arr: Vec<i32>) -> Vec<i32> {
+        let mut ans = arr;
+        let len = ans.len();
+        let mut rmax = ans[len - 1];
+        ans[len - 1] = -1;
+        for i in 2..(len + 1) {
+            let temp = ans[len - i];
+            ans[len - i] = rmax;
+            if temp > rmax {
+                rmax = temp;
+            }
+        }
+        ans
+    }
+
 }
 
 
@@ -394,6 +409,18 @@ impl Solution {
 mod tests {
     use super::datastructure;
     use super::Solution;
+
+    #[test]
+    fn code1299(){
+        // 1299. 将每个元素替换为右侧最大元素
+        // 给你一个数组 arr ，请你将每个元素用它右边最大的元素替换，
+        // 如果是最后一个元素，用 -1 替换。
+        // 完成所有替换操作后，请你返回这个数组。
+        assert_eq!(
+            Solution::replace_elements(vec![17,18,5,4,6,1]),
+            vec![18,6,6,6,1,-1]
+        );
+    }
 
     #[test]
     fn offer05(){
