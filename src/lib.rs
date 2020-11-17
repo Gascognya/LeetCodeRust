@@ -402,6 +402,28 @@ impl Solution {
         ans
     }
 
+    pub fn count_negatives(grid: Vec<Vec<i32>>) -> i32 {
+        let mut index = 0;
+        for num in &grid[0] {
+            if *num < 0 {
+                break;
+            }
+            index += 1;
+        }
+        let mut res = grid[0].len() - index;
+        for line in 1..grid.len() {
+            for i in (0..index).rev() {
+                if grid[line][i] >= 0 {
+                    break;
+                }
+                index -= 1;
+            }
+            res += grid[line].len() - index;
+        }
+        res as i32
+        // grid.iter().fold(0, |sum, row| sum + row.iter().filter(|&&x| x < 0).count() as i32)
+    }
+
 }
 
 
@@ -409,6 +431,44 @@ impl Solution {
 mod tests {
     use super::datastructure;
     use super::Solution;
+
+    #[test]
+    fn code1351(){
+        // 1351. 统计有序矩阵中的负数
+        // 给你一个 m * n 的矩阵 grid，
+        // 矩阵中的元素无论是按行还是按列，都以非递增顺序排列。 
+        // 请你统计并返回 grid 中 负数 的数目。
+
+        assert_eq!(
+            Solution::count_negatives(vec![
+                vec![4,3,2,-1], 
+                vec![3,2,1,-1], 
+                vec![1,1,-1,-2],
+                vec![-1,-1,-2,-3]
+                ]),
+            8
+        );
+        assert_eq!(
+            Solution::count_negatives(vec![
+                vec![3,2], 
+                vec![1,0]
+                ]),
+            0
+        );
+        assert_eq!(
+            Solution::count_negatives(vec![
+                vec![1,-1], 
+                vec![-1,-1]
+                ]),
+            3
+        );
+        assert_eq!(
+            Solution::count_negatives(vec![
+                vec![-1]
+                ]),
+            1
+        );
+    }
 
     #[test]
     fn code1299(){
