@@ -424,6 +424,28 @@ impl Solution {
         // grid.iter().fold(0, |sum, row| sum + row.iter().filter(|&&x| x < 0).count() as i32)
     }
 
+    pub fn maximum69_number (num: i32) -> i32 {
+        match num.to_string().replacen("6", "9", 1).parse::<i32>() {
+            Ok(n) => n,
+            Err(_) => num
+        }
+    }
+
+    pub fn reverse_print(head: Option<Box<ListNode>>) -> Vec<i32> {
+        let mut res:Vec<i32> = vec![];
+        let mut p = &head;
+        loop {
+            match p {
+                Some(n) => {
+                    p = &n.next;
+                    res.push(n.val);
+                },
+                None => break
+            }
+        }
+        res.reverse();
+        res
+    }
 }
 
 
@@ -431,6 +453,42 @@ impl Solution {
 mod tests {
     use super::datastructure;
     use super::Solution;
+
+    #[test]
+    fn offer06(){
+        // 剑指 Offer 06. 从尾到头打印链表
+        // 输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
+
+        let head = datastructure::ListNode::to_link(vec![1, 3, 2]);
+
+        assert_eq!(
+            Solution::reverse_print(head),
+            vec![2, 3, 1]
+        );
+    }
+
+    #[test]
+    fn code1323(){
+        // 1323. 6 和 9 组成的最大数字
+        // 给你一个仅由数字 6 和 9 组成的正整数 num。
+        // 你最多只能翻转一位数字，将 6 变成 9，或者把 9 变成 6 。
+        // 请返回你可以得到的最大数字。
+
+        assert_eq!(
+            Solution::maximum69_number(9669),
+            9969
+        );
+
+        assert_eq!(
+            Solution::maximum69_number(9996),
+            9999
+        );
+
+        assert_eq!(
+            Solution::maximum69_number(9999),
+            9999
+        );
+    }
 
     #[test]
     fn code1351(){
