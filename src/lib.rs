@@ -446,6 +446,56 @@ impl Solution {
         res.reverse();
         res
     }
+
+    pub fn freq_alphabets(s: String) -> String {
+        let mut res = String::new();
+        let sp = s.split("#");
+        let all_len = sp.clone().count() - 1;
+        for (i, s) in sp.enumerate() {
+            let len = s.len();
+            if i == all_len { 
+                for c in s[0..len].chars().into_iter() {
+                    res.push((c as u8 + 48) as char);
+                }
+                break;
+            }
+            for c in s[0..len-2].chars().into_iter() {
+                res.push((c as u8 + 48) as char);
+            }
+            res.push((s[len-2..len].parse::<u8>().unwrap() + 96) as char);
+        }
+        res
+    }
+
+    pub fn self_dividing_numbers(left: i32, right: i32) -> Vec<i32> {
+        let mut res = vec![];
+        for n in left..=right {
+            // let v = n.to_string().chars().map(|c| {
+            //     c.to_digit(10).unwrap() as i32
+            // }).collect::<Vec<i32>>();
+            // if v.contains(&0) {
+            //     continue;
+            // }
+            // if v.into_iter().all(|num| n % num == 0) {
+            //     res.push(n)
+            // }
+            let mut flag = true;
+            if n.to_string().chars().all(|c| {
+                if c == '0' {
+                    flag = false;
+                }
+                if flag {
+                    return n % c.to_digit(10).unwrap() as i32 == 0
+                }
+                false
+            }){
+                res.push(n)
+            }
+            
+        }
+        res
+    }
+
 }
 
 
@@ -454,6 +504,45 @@ mod tests {
     use super::datastructure;
     use super::Solution;
 
+    #[test]
+    fn code728(){
+        // 728. 自除数
+        // 自除数 是指可以被它包含的每一位数除尽的数。
+        // 例如，128 是一个自除数，因为 128 % 1 == 0，128 % 2 == 0，128 % 8 == 0。
+        // 还有，自除数不允许包含 0 。
+        // 给定上边界和下边界数字，输出一个列表，列表的元素是边界（含边界）内所有的自除数。
+        assert_eq!(
+            Solution::self_dividing_numbers(1, 22),
+            vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 15, 22]
+        );
+    }
+
+    #[test]
+    fn code1309(){
+        // 1309. 解码字母到整数映射
+        // 给你一个字符串 s，它由数字（'0' - '9'）和 '#' 组成。
+        // 我们希望按下述规则将 s 映射为一些小写英文字符：
+        // 字符（'a' - 'i'）分别用（'1' - '9'）表示。
+        // 字符（'j' - 'z'）分别用（'10#' - '26#'）表示。 
+        // 返回映射之后形成的新字符串。
+        // 题目数据保证映射始终唯一。
+        assert_eq!(
+            Solution::freq_alphabets(String::from("1210#3411#12")),
+            String::from("abjcdkab")
+        );
+        assert_eq!(
+            Solution::freq_alphabets(String::from("1326#")),
+            String::from("acz")
+        );
+        assert_eq!(
+            Solution::freq_alphabets(String::from("25#")),
+            String::from("y")
+        );
+        assert_eq!(
+            Solution::freq_alphabets(String::from("12345678910#11#12#13#14#15#16#17#18#19#20#21#22#23#24#25#26#")),
+            String::from("abcdefghijklmnopqrstuvwxyz")
+        );
+    }
     #[test]
     fn offer06(){
         // 剑指 Offer 06. 从尾到头打印链表
