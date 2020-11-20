@@ -496,6 +496,17 @@ impl Solution {
         res
     }
 
+    pub fn reverse_list(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut last: Option<Box<ListNode>> = None;
+        let mut this = head;
+        while let Some(mut node) = this {
+            this = node.next.take();
+            node.next = last;
+            last = Some(node);
+        }
+        return last;
+    }
+
 }
 
 
@@ -503,6 +514,20 @@ impl Solution {
 mod tests {
     use super::datastructure;
     use super::Solution;
+
+    #[test]
+    fn offer24(){
+        // 剑指 Offer 24. 反转链表
+        // 定义一个函数，输入一个链表的头节点，
+        // 反转该链表并输出反转后链表的头节点。
+
+        let head = datastructure::ListNode::to_link(vec![1, 2, 3, 4, 5]);
+        let result = datastructure::ListNode::to_link(vec![5, 4, 3, 2, 1]);
+        assert_eq!(
+            Solution::reverse_list(head),
+            result
+        );
+    }
 
     #[test]
     fn code728(){
